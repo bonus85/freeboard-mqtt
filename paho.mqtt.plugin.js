@@ -10,7 +10,7 @@
 		"display_name": "Paho MQTT",
         "description" : "Receive data from an MQTT server.",
 		"external_scripts" : [
-			"<full address of the paho mqtt javascript client>"
+			"https://cdnjs.cloudflare.com/ajax/libs/paho-mqtt/1.0.1/mqttws31.js"
 		],
 		"settings"    : [
 			{
@@ -98,6 +98,7 @@
 		};
 
 		function onMessageArrived(message) {
+			console.log("New message");
 			data.topic = message.destinationName;
 			if (currentSettings.json_data) {
 				data.msg = JSON.parse(message.payloadString);
@@ -110,6 +111,7 @@
 		// **onSettingsChanged(newSettings)** (required) : A public function we must implement that will be called when a user makes a change to the settings.
 		self.onSettingsChanged = function(newSettings)
 		{
+			console.log("New settings");
 			client.disconnect();
 			data = {};
 			currentSettings = newSettings;
@@ -122,6 +124,7 @@
 		// **updateNow()** (required) : A public function we must implement that will be called when the user wants to manually refresh the datasource
 		self.updateNow = function()
 		{
+			console.log("Update now called");
 			// Don't need to do anything here, can't pull an update from MQTT.
 		}
 
@@ -139,10 +142,12 @@
 										currentSettings.client_id);
 		client.onConnectionLost = onConnectionLost;
 		client.onMessageArrived = onMessageArrived;
+	    console.log("Connecting");
 		client.connect({onSuccess:onConnect, 
 						
 						userName: currentSettings.username,
 						password: currentSettings.password,
 						useSSL: currentSettings.use_ssl});
+	    console.log("Success");
 	}
 }());
